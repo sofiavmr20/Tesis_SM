@@ -205,3 +205,11 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Data
+data/*.zarr
+data/*/*.nc4
+data/*.nc
+data/*.pkl
+data/raw/*.nc
+data/processed/*.pkl

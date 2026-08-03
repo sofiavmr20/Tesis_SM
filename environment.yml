@@ -1,0 +1,15 @@
+name: tesis_sm
+channels:
+ - conda-forge
+dependencies:
+ - cartopy
+ - earthaccess
+ - xarray
+ - python-dotenv
+ - pandas
+ - h5netcdf
+ - cftime
+ - dask
+ - cdsapi
+ - rasterio
+# Crear entorno: conda env create -f environment.yml

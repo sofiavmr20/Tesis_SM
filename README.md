@@ -19,25 +19,28 @@ El objetivo principal es desarrollar y comparar modelos de series de tiempo que 
 ## 📁 Estructura del repositorio
 
 ```
-├── data/                     # Datos (raw, procesados, imputados)
-│   ├── raw/                  # Datos originales (no versionados si son grandes)
+├── data/
+│   ├── raw/                  # Datos originales (no versionados)
 │   ├── processed/            # Datos armonizados y listos para modelado
-│   └── spatial/              # Shapefiles, matrices de pesos espaciales
+│   ├── spatial/              # Shapefiles, matrices de pesos espaciales
+│   ├── GPM_IMERG/            # Datos satelitales GPM IMERG (diarios)
+│   └── GPM_IMERG.zarr/       # Cubo espacio-temporal en formato Zarr
 ├── notebooks/                # Jupyter notebooks y RMarkdown
-│   ├── 01_eda.Rmd            # Análisis exploratorio
-│   ├── 02_sarima_var.ipynb   # Modelos tradicionales
-│   └── 03_conv_lstm.ipynb    # ConvLSTM con datos satelitales
-├── scripts/                  # Scripts reutilizables (R y Python)
+├── scripts/
+│   ├── download/             # Descarga de datos (GPM IMERG, ERA5)
 │   ├── preprocess/           # Limpieza, imputación, control de calidad
-│   ├── models/               # Funciones para SARIMA, VAR, STAR, INLA, ConvLSTM
-│   └── evaluation/           # Métricas de error, pruebas estadísticas
-├── results/                  # Figuras, tablas, métricas comparativas
+│   ├── models/               # StatsForecast, MLForecast, NeuralForecast
+│   ├── evaluation/           # Métricas de error, pruebas estadísticas
+│   └── exploratory/          # Scripts de prueba y exploración
+├── output/                   # Figuras y gráficos generados
+│   └── figures/
+├── results/                  # Resultados finales
 │   ├── figures/
 │   ├── tables/
-│   └── best_model/           # Modelo final y umbrales de alerta
-├── docs/                     # Documentación adicional (informe, presentación)
-├── requirements.txt          # Dependencias de Python
-├── renv.lock / renv/         # (Opcional) Entorno reproducible para R
+│   └── models/
+├── docs/                     # Documentación (informe, presentación)
+├── pyproject.toml            # Dependencias de Python (uv)
+├── environment.yml           # Entorno Conda alternativo
 ├── LICENSE                   # Licencia del proyecto
 └── README.md                 # Este archivo
 ```
@@ -51,16 +54,6 @@ Las principales librerías se listan en `pyproject.toml`. Instalación:
 uv sync --upgrade
 ```
 
-### R (4.0+)
-Para los modelos STAR, INLA y análisis espacio-temporal:
-
-```r
-install.packages(c("tidyverse", "sf", "raster", "spacetime", "gstat", 
-                   "forecast", "vars", "tseries", "ggplot2", "tmap"))
-# INLA se instala desde repositorio propio:
-install.packages("INLA", repos="https://inla.r-inla-download.org/R/stable")
-```
-
 ## 🚀 Instrucciones de uso (flujo de trabajo)
 
 1. **Clonar el repositorio**
@@ -71,26 +64,22 @@ install.packages("INLA", repos="https://inla.r-inla-download.org/R/stable")
 
 2. **Descargar datos**  
    - Solicitar datos de estaciones
-   - Descargar satelitales usando scripts en `scripts/preprocess/download_sat_data.py`.
+   - Descargar satelitales usando scripts en `scripts/download`.
 
 3. **Preprocesar datos**  
    Ejecutar el pipeline de control de calidad e imputación:
 
    ```bash
    python scripts/preprocess/quality_control.py
-   Rscript scripts/preprocess/impute_spatial.R
    ```
 
 4. **Análisis exploratorio** 
 
-   Abrir `notebooks/01_eda.Rmd` (RStudio) o `notebooks/01_eda.ipynb` (Jupyter).
+   Abrir `notebooks/01_eda.ipynb` (Jupyter).
 
 5. **Ejecutar modelos**  
 
-   - SARIMA / VAR: `notebooks/02_sarima_var.ipynb`  
-   - STAR(1,1): `Rscript scripts/models/star_model.R`  
-   - Bayesiano INLA: `Rscript scripts/models/inla_spacetime.R`  
-   - ConvLSTM: `python scripts/models/conv_lstm_train.py`
+   - AutoARIMA: `notebooks/02_statsforecast.ipynb`  
 
 6. **Evaluar y comparar**  
 
@@ -124,7 +113,7 @@ Este repositorio es parte de un trabajo de pregrado. No se aceptan contribucione
 
 ## 📄 Licencia
 
-Este proyecto está bajo la licencia MIT.
+Este proyecto está bajo la licencia Creative Commons BY-NC-SA 4.0.
 
 ## 📧 Contacto
 

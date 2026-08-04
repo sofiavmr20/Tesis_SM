@@ -3,13 +3,19 @@ name = "tesis-sm"
 version = "0.1.0"
 requires-python = ">=3.14"
 dependencies = [
-    "jupyterlab>=4.6.1",
-    "marimo>=0.23.14",
-    "matplotlib>=3.11.0",
-    "pandas>=3.0.3",
+    "cartopy>=0.25.0",
+    "dask>=2026.7.1",
+    "h5netcdf>=1.8.1",
+    "h5py>=3.16.0",
+    "jupyterlab>=4.6.2",
+    "marimo>=0.23.16",
+    "matplotlib>=3.11.1",
+    "pandas>=3.0.5",
+    "xarray>=2026.7.0",
+    "zarr>=3.3.0",
 ]
 
 [dependency-groups]
 dev = [
-    "zensical>=0.0.50",
+    "zensical>=0.0.52",
 ]

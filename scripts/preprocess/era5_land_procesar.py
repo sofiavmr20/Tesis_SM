@@ -5,6 +5,7 @@ from abc import ABC, abstractmethod
 import pandas as pd
 import xarray as xr
 
+
 class archivos_nc(ABC):
     def __init__(
         self,
@@ -58,8 +59,12 @@ class archivos_nc(ABC):
         print("\nCombinando todos los DataFrames...")
         print(f"\n--- Resultado Final ---")
         print(f"Dimensiones del DataFrame consolidado: {df_final.shape}")
-        print(f"Rango temporal UTC:   {df_final['valid_time_utc'].min()} -> {df_final['valid_time_utc'].max()}")
-        print(f"Rango temporal UTC-4: {df_final['time_utc4'].min()} -> {df_final['time_utc4'].max()}")
+        print(
+            f"Rango temporal UTC:   {df_final['valid_time_utc'].min()} -> {df_final['valid_time_utc'].max()}"
+        )
+        print(
+            f"Rango temporal UTC-4: {df_final['time_utc4'].min()} -> {df_final['time_utc4'].max()}"
+        )
         print("\nVista previa de las primeras filas:")
         print(df_final.head())
 
@@ -68,12 +73,15 @@ class archivos_nc(ABC):
         print("¡Procesamiento y guardado completados exitosamente!")
         return df_final
 
+
 class archivos_nc_impl(archivos_nc):
     def listar_archivos(self):
         dir_path = Path(self.directorio_entrada)
         archivos_nc = sorted(dir_path.glob("*.nc"))
         if not archivos_nc:
-            raise FileNotFoundError(f"Error: No se encontraron archivos .nc en {dir_path.resolve()}")
+            raise FileNotFoundError(
+                f"Error: No se encontraron archivos .nc en {dir_path.resolve()}"
+            )
         self.archivos = archivos_nc
         return self.archivos
 
@@ -120,8 +128,8 @@ class archivos_nc_impl(archivos_nc):
                 d.close()
 
             print(
-                f"Lote [{i+1}/{total_lotes}] procesado "
-                f"(Archivos {i*self.lote_tamano + 1} a {min((i+1)*self.lote_tamano, len(self.archivos))})..."
+                f"Lote [{i + 1}/{total_lotes}] procesado "
+                f"(Archivos {i * self.lote_tamano + 1} a {min((i + 1) * self.lote_tamano, len(self.archivos))})..."
             )
 
         return pd.concat(dataframes, ignore_index=True)
@@ -133,15 +141,17 @@ class archivos_nc_impl(archivos_nc):
         df_final.to_parquet(self.archivo_salida, index=False, compression="snappy")
         return df_final
 
+
 # %%
+
 
 def procesar_era5_a_parquet(
     directorio_entrada="data_era5land",
-    archivo_salida="era5_land_merida_2020_2026_utc4.parquet"
+    archivo_salida="era5_land_merida_2020_2026_utc4.parquet",
 ):
     processor = archivos_nc_impl(directorio_entrada, archivo_salida)
     return processor.procesar_era5_a_parquet()
 
+
 if __name__ == "__main__":
     procesar_era5_a_parquet()
-

@@ -212,4 +212,8 @@ data/*/*.nc4
 data/*.nc
 data/*.pkl
 data/raw/*.nc
+data/raw/*.tif
+data/raw/era5-land/*.nc
 data/processed/*.pkl
+data/processed/*.parquet
+data/spatial/*.gpkg

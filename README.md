@@ -99,6 +99,40 @@ uv sync --upgrade
 | GPM-IMERG (NASA) | Precipitación | 0.1°, diaria | 2015–2024 |
 | ERA5 (Copernicus) | Humedad, presión, temperatura | 0.25°, horaria → diaria | 2015–2024 |
 
+### Datos adicionales
+
+Los datos de las divisiones administrativas se obtuvieron de GADM (Database of Global Administrative Areas - gadm.org). Se descargó el mapa a nivel ADM2 que en el caso de Venezuela corresponde a Municipios.
+
+- https://geodata.ucdavis.edu/gadm/gadm4.1/gpkg/gadm41_VEN.gpkg
+
+Tiene como sistema de coordenadas de referencia latitud y longitud, y datum WGS84.
+
+El modelo digital de terreno se descargó de OpenTopography, seleccionando el producto "Copernicus GLO-30 Digital Elevation Model" https://portal.opentopography.org/raster?opentopoID=OTSDEM.032021.4326.3, introduciendo las coordenadas manualmente: 
+   Xmin: -72.1; Ymin: 7.4;  Xmax: -70.3; Ymax: 9.4
+
+Esto es, un decimal adicional en cada dirección sobre los datos extraídos de Era5-Land)
+
+El archivo descargado se reproyectó a UTM y de este se extrajo la pendiente:
+
+```bash
+$ gdalwarp \
+  -t_srs EPSG:32619 \
+  -tr 30 30 \
+  -r bilinear \
+  -multi \
+  merida_dem_wgs84.tif \
+  merida_dem_utm30.tif
+$ gdaldem slope \
+  -compute_edges \
+  merida_dem_utm30.tif \
+  merida_slope_deg.tif
+$ gdaldem slope \
+  -p \
+  -compute_edges \
+  merida_dem_utm30.tif \
+  merida_slope_pct.tif
+``
+
 **Nota:** Los datos brutos no se incluyen en este repositorio por políticas de acceso. Los scripts de descarga y ejemplos sintéticos se proporcionan para reproducibilidad.
 
 ## 📈 Resultados esperados
